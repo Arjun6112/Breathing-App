@@ -120,12 +120,14 @@
   height: auto;
   opacity: 1;
   margin-top: 0.75rem;
+  padding-bottom: 0.1rem; /* Add bottom padding to ensure content isn't cut off */
 }
 
 .settings {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  margin-bottom: 0.5rem; /* Add margin to the bottom of settings container */
 }
 
 .setting {
@@ -169,6 +171,10 @@
   border-radius: 50%;
   background: var(--primary);
   cursor: pointer;
+}
+
+.setting:last-child {
+  margin-bottom: 0.5rem;
 }
 
 .section-divider {
