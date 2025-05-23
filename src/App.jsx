@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import BreathingCircle from "./components/BreathingCircle";
 import ControlPanel from "./components/ControlPanel";
+import AudioPlayer from "./components/AudioPlayer";
+import ThemeToggle from "./components/ThemeToggle";
 import "./index.css"; // Ensure CSS is properly imported
 
 function App() {
@@ -32,8 +34,78 @@ function App() {
     generateStars();
   }, []);
 
+  // Add animated background elements for themes
+  const [lightElements, setLightElements] = useState([]);
+  const [darkElements, setDarkElements] = useState([]);
+
+  // Generate theme-specific background elements
+  useEffect(() => {
+    // Generate light theme elements (light green)
+    const newLightElements = [];
+    for (let i = 0; i < 15; i++) {
+      newLightElements.push({
+        id: `light-${i}`,
+        top: Math.random() * 100,
+        left: Math.random() * 100,
+        size: Math.random() * 80 + 40,
+        opacity: Math.random() * 0.1 + 0.02,
+        blur: Math.random() * 40 + 30,
+        animationDuration: Math.random() * 80 + 40,
+      });
+    }
+    setLightElements(newLightElements);
+
+    // Generate dark theme elements (warm yellow)
+    const newDarkElements = [];
+    for (let i = 0; i < 15; i++) {
+      newDarkElements.push({
+        id: `dark-${i}`,
+        top: Math.random() * 100,
+        left: Math.random() * 100,
+        size: Math.random() * 80 + 40,
+        opacity: Math.random() * 0.08 + 0.02,
+        blur: Math.random() * 40 + 30,
+        animationDuration: Math.random() * 80 + 40,
+      });
+    }
+    setDarkElements(newDarkElements);
+  }, []);
+
   return (
     <div className="app-container">
+      <div className="theme-background">
+        {lightElements.map((element) => (
+          <div
+            key={element.id}
+            className="light-element"
+            style={{
+              top: `${element.top}%`,
+              left: `${element.left}%`,
+              width: `${element.size}px`,
+              height: `${element.size}px`,
+              opacity: element.opacity,
+              filter: `blur(${element.blur}px)`,
+              animation: `float ${element.animationDuration}s infinite alternate ease-in-out`,
+            }}
+          />
+        ))}
+        {darkElements.map((element) => (
+          <div
+            key={element.id}
+            className="dark-element"
+            style={{
+              top: `${element.top}%`,
+              left: `${element.left}%`,
+              width: `${element.size}px`,
+              height: `${element.size}px`,
+              opacity: element.opacity,
+              filter: `blur(${element.blur}px)`,
+              animation: `float ${element.animationDuration}s infinite alternate ease-in-out`,
+            }}
+          />
+        ))}
+      </div>
+
       <div className="stars">
         {stars.map((star) => (
           <div
@@ -50,6 +122,9 @@ function App() {
           />
         ))}
       </div>
+
+      <ThemeToggle />
+      <AudioPlayer />
 
       <header className="app-header">
         <h1>Mindful Breathing</h1>
@@ -69,7 +144,18 @@ function App() {
         />
       </div>
 
-      <div className="control-panel-section">
+      {/* Control panel with explicit inline styles for positioning */}
+      <div
+        className="control-panel-section"
+        style={{
+          position: "fixed",
+          bottom: "1.5rem",
+          right: "1.5rem",
+          left: "auto",
+          maxWidth: "320px",
+          zIndex: 10,
+        }}
+      >
         <ControlPanel
           isBreathing={isBreathing}
           setIsBreathing={setIsBreathing}

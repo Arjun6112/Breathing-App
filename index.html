@@ -8,7 +8,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
     <title>Mindful Breathing App</title>
-    <meta name="description" content="A simple tool for guided breathing exercises">
+    <meta name="description" content="A simple tool for guided breathing exercises and relaxation">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#e8f8eb">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#211c14">
+    <script>
+      // On page load, immediately set theme to avoid flashing
+      (function() {
+        const savedTheme = localStorage.getItem("breathing-app-theme");
+        if (savedTheme) {
+          document.documentElement.setAttribute("data-theme", savedTheme);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

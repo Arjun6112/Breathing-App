@@ -12,10 +12,13 @@ const BreathingCircle = ({
   const [message, setMessage] = useState("Get ready...");
   const [phaseCount, setPhaseCount] = useState(0);
   const [particles, setParticles] = useState([]);
+  const [ripples, setRipples] = useState([]);
+  const [sparkles, setSparkles] = useState([]);
   const circleRef = useRef(null);
   const timerRef = useRef(null);
   const cycleCountRef = useRef(0);
   const particlesContainerRef = useRef(null);
+  const sparkleIntervalRef = useRef(null);
 
   // Calculate time for each phase in milliseconds
   const inhaleDuration = breathDuration * inhaleRatio * 1000;
@@ -62,6 +65,80 @@ const BreathingCircle = ({
     setTimeout(() => {
       setParticles((prev) => prev.filter((p) => p.phase !== phase));
     }, breathDuration * 1000);
+  };
+
+  // Create a ripple effect with more dynamic ripples
+  const createRipple = (event) => {
+    if (!circleRef.current) return;
+
+    const circle = circleRef.current;
+    const rect = circle.getBoundingClientRect();
+
+    // Get click position relative to the circle
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    // Calculate position as percentage
+    const posX = (x / rect.width) * 100;
+    const posY = (y / rect.height) * 100;
+
+    // Calculate distance from center for ripple intensity
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const distanceFromCenter = Math.sqrt(
+      Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)
+    );
+    const maxDistance = Math.sqrt(
+      Math.pow(rect.width / 2, 2) + Math.pow(rect.height / 2, 2)
+    );
+    const intensity = 1 - (distanceFromCenter / maxDistance) * 0.5; // Higher intensity closer to center
+
+    // Add new ripple with intensity
+    const newRipple = {
+      id: Date.now(),
+      x: posX,
+      y: posY,
+      intensity: intensity,
+    };
+
+    setRipples((prev) => [...prev, newRipple]);
+
+    // Remove ripple after animation completes
+    setTimeout(() => {
+      setRipples((prev) => prev.filter((r) => r.id !== newRipple.id));
+    }, 1500);
+  };
+
+  // Generate random sparkles
+  const generateSparkles = () => {
+    const newSparkles = [];
+    const sparkleCount = Math.floor(Math.random() * 3) + 1; // 1-3 sparkles at a time
+
+    for (let i = 0; i < sparkleCount; i++) {
+      // Calculate position on the circle's edge
+      const angle = Math.random() * 2 * Math.PI;
+      const radius = 140; // Circle radius
+      const offsetX = Math.cos(angle) * radius;
+      const offsetY = Math.sin(angle) * radius;
+
+      newSparkles.push({
+        id: Date.now() + i,
+        left: 50 + (offsetX / radius) * 50, // Convert to percentage
+        top: 50 + (offsetY / radius) * 50, // Convert to percentage
+        duration: Math.random() * 2 + 2, // 2-4 seconds
+        delay: Math.random() * 0.5, // 0-0.5 second delay
+        opacity: Math.random() * 0.4 + 0.6, // 0.6-1.0 opacity
+      });
+    }
+
+    setSparkles((prev) => [...prev, ...newSparkles]);
+
+    // Remove old sparkles
+    setTimeout(() => {
+      setSparkles((prev) =>
+        prev.filter((s) => !newSparkles.some((ns) => ns.id === s.id))
+      );
+    }, 4000);
   };
 
   // Reset the breathing cycle
@@ -139,6 +216,29 @@ const BreathingCircle = ({
     holdAfterExhale,
   ]);
 
+  // Set up sparkle interval
+  useEffect(() => {
+    if (isBreathing) {
+      // Generate initial sparkles
+      generateSparkles();
+
+      // Set up interval for new sparkles
+      sparkleIntervalRef.current = setInterval(generateSparkles, 700);
+    } else {
+      // Clear interval when not breathing
+      if (sparkleIntervalRef.current) {
+        clearInterval(sparkleIntervalRef.current);
+        sparkleIntervalRef.current = null;
+      }
+    }
+
+    return () => {
+      if (sparkleIntervalRef.current) {
+        clearInterval(sparkleIntervalRef.current);
+      }
+    };
+  }, [isBreathing]);
+
   // Get the CSS class for the current breathing phase
   const getPhaseClass = () => {
     switch (breathingPhase) {
@@ -161,6 +261,7 @@ const BreathingCircle = ({
         ref={circleRef}
         className={`breathing-circle ${getPhaseClass()}`}
         data-phase={breathingPhase}
+        onClick={createRipple}
         style={{
           "--inhale-duration": `${breathDuration * inhaleRatio}s`,
           "--exhale-duration": `${
@@ -173,6 +274,50 @@ const BreathingCircle = ({
           "--hold-after-exhale": `${holdAfterExhale}s`,
         }}
       >
+        {/* Wavy border element */}
+        <div className="wavy-border"></div>
+
+        {/* Additional wave layers */}
+        <div className="wave-layer1"></div>
+        <div className="wave-layer2"></div>
+        <div className="wave-layer3"></div>
+
+        {/* Glowing edge effect */}
+        <div className="glow-edge"></div>
+
+        {/* Water surface effect */}
+        <div className="water-surface"></div>
+
+        {/* Magical sparkles */}
+        <div className="sparkles">
+          {sparkles.map((sparkle) => (
+            <div
+              key={sparkle.id}
+              className="sparkle"
+              style={{
+                left: `${sparkle.left}%`,
+                top: `${sparkle.top}%`,
+                "--sparkle-duration": `${sparkle.duration}s`,
+                "--sparkle-delay": `${sparkle.delay}s`,
+                "--sparkle-opacity": sparkle.opacity,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Ripple effects */}
+        {ripples.map((ripple) => (
+          <div
+            key={ripple.id}
+            className="ripple"
+            style={{
+              left: `${ripple.x}%`,
+              top: `${ripple.y}%`,
+              "--ripple-intensity": ripple.intensity,
+            }}
+          />
+        ))}
+
         <div className="particles-container" ref={particlesContainerRef}>
           {particles.map((particle) => (
             <div

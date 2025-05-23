@@ -15,16 +15,16 @@
   height: 400px;
   background: radial-gradient(
     circle,
-    rgba(102, 198, 255, 0.12) 0%,
-    rgba(138, 120, 246, 0.08) 35%,
-    rgba(16, 18, 27, 0) 70%
+    color-mix(in srgb, var(--primary) 12%, transparent) 0%,
+    color-mix(in srgb, var(--primary) 8%, transparent) 35%,
+    transparent 70%
   );
   z-index: -1;
   border-radius: 50%;
   filter: blur(20px);
 }
 
-/* Main breathing circle */
+/* Main breathing circle - enhanced with magical effects */
 .breathing-circle {
   width: 280px;
   height: 280px;
@@ -32,47 +32,371 @@
   border-radius: 50%;
   background: radial-gradient(
     circle at center,
-    hsl(230, 85%, 60%),
-    hsl(240, 85%, 55%)
+    var(--circle-gradient-start),
+    var(--circle-gradient-end)
   );
-  box-shadow: 0 0 60px rgba(102, 198, 255, 0.3);
+  box-shadow: 0 0 60px var(--circle-glow);
   display: flex;
   justify-content: center;
   align-items: center;
   transition: transform 0.5s ease, box-shadow 0.5s ease;
+  cursor: pointer;
+  overflow: visible; /* Allow waves to overflow */
 }
 
-/* Subtle gradient overlay */
-.breathing-circle::before {
+/* Enhanced wavy effects */
+.wavy-border {
+  position: absolute;
+  top: -15px;
+  left: -15px;
+  right: -15px;
+  bottom: -15px;
+  border-radius: 50%;
+  background: transparent;
+  pointer-events: none;
+  z-index: 1;
+  animation: pulse 8s infinite ease-in-out;
+}
+
+/* Multiple wave layers for depth */
+.wavy-border::before {
   content: "";
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  border-radius: 47% 53% 70% 30% / 30% 43% 57% 70%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  opacity: 0.6;
+  animation: wave-rotate1 12s infinite linear;
+  filter: blur(0.3px);
+}
+
+.wavy-border::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  border-radius: 43% 57% 37% 63% / 55% 45% 55% 45%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  opacity: 0.4;
+  animation: wave-rotate2 10s infinite linear reverse;
+  animation-delay: -3s;
+  filter: blur(0.2px);
+}
+
+/* Additional wave layers */
+.wave-layer1,
+.wave-layer2,
+.wave-layer3 {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
-  z-index: 1;
   pointer-events: none;
+  overflow: hidden;
 }
 
-/* Particle container */
-.particles-container {
+.wave-layer1::before {
+  content: "";
   position: absolute;
-  width: 100%;
-  height: 100%;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  border-radius: 65% 35% 65% 35% / 40% 60% 40% 60%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  animation: wave-rotate3 14s infinite ease-in-out;
+  filter: blur(0.5px);
+}
+
+.wave-layer2::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 40% 60% 30% 70% / 50% 30% 70% 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  animation: wave-rotate4 18s infinite linear reverse;
+  filter: blur(0.3px);
+}
+
+.wave-layer3::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 35% 65% 60% 40% / 45% 45% 55% 55%;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  animation: wave-rotate5 15s infinite ease-in-out alternate;
+  filter: blur(0.4px);
+}
+
+/* Glowing edge */
+.glow-edge {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.6);
+  opacity: 0;
+  animation: glow-pulse 4s infinite alternate ease-in-out;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Water-like surface */
+.water-surface {
+  position: absolute;
+  inset: 0;
   border-radius: 50%;
   overflow: hidden;
-  z-index: 0;
+  z-index: 2;
   opacity: 0.7;
+  backdrop-filter: blur(1px);
+  pointer-events: none;
 }
 
-/* Individual particle styling */
-.particle {
+.water-surface::before {
+  content: "";
   position: absolute;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
+  inset: -50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  opacity: 0.4;
+  animation: water-move 8s infinite linear;
+}
+
+.water-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  animation: water-shine 6s infinite ease-in-out alternate;
+}
+
+/* Magical sparkles */
+.sparkles {
+  position: absolute;
+  inset: -20px;
+  z-index: 3;
   pointer-events: none;
+}
+
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: white;
+  opacity: 0;
+  filter: blur(0.5px);
+  box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.8);
+  animation: sparkle-fade var(--sparkle-duration, 3s) infinite ease-out;
+  animation-delay: var(--sparkle-delay, 0s);
+}
+
+/* Enhanced animation for wavy edges */
+@keyframes wave-rotate1 {
+  0% {
+    transform: rotate(0deg);
+    border-radius: 47% 53% 70% 30% / 30% 43% 57% 70%;
+  }
+  33% {
+    border-radius: 55% 45% 30% 70% / 45% 55% 45% 55%;
+  }
+  66% {
+    border-radius: 37% 63% 55% 45% / 40% 50% 50% 60%;
+  }
+  100% {
+    transform: rotate(360deg);
+    border-radius: 47% 53% 70% 30% / 30% 43% 57% 70%;
+  }
+}
+
+@keyframes wave-rotate2 {
+  0% {
+    transform: rotate(0deg);
+    border-radius: 43% 57% 37% 63% / 55% 45% 55% 45%;
+  }
+  33% {
+    border-radius: 67% 33% 50% 50% / 35% 65% 35% 65%;
+  }
+  66% {
+    border-radius: 40% 60% 45% 55% / 62% 38% 62% 38%;
+  }
+  100% {
+    transform: rotate(360deg);
+    border-radius: 43% 57% 37% 63% / 55% 45% 55% 45%;
+  }
+}
+
+@keyframes wave-rotate3 {
+  0% {
+    transform: rotate(0deg) scale(1);
+    border-radius: 65% 35% 65% 35% / 40% 60% 40% 60%;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.02);
+    border-radius: 35% 65% 35% 65% / 60% 40% 60% 40%;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    border-radius: 65% 35% 65% 35% / 40% 60% 40% 60%;
+  }
+}
+
+@keyframes wave-rotate4 {
+  0% {
+    transform: rotate(0deg) scale(0.99);
+    border-radius: 40% 60% 30% 70% / 50% 30% 70% 50%;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.01);
+    border-radius: 60% 40% 70% 30% / 30% 50% 50% 70%;
+  }
+  100% {
+    transform: rotate(360deg) scale(0.99);
+    border-radius: 40% 60% 30% 70% / 50% 30% 70% 50%;
+  }
+}
+
+@keyframes wave-rotate5 {
+  0% {
+    transform: rotate(-5deg) scale(1);
+    border-radius: 35% 65% 60% 40% / 45% 45% 55% 55%;
+  }
+  50% {
+    transform: rotate(5deg) scale(1.03);
+    border-radius: 60% 40% 35% 65% / 55% 55% 45% 45%;
+  }
+  100% {
+    transform: rotate(-5deg) scale(1);
+    border-radius: 35% 65% 60% 40% / 45% 45% 55% 55%;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+}
+
+@keyframes water-move {
+  0% {
+    transform: translate(-10%, -10%) rotate(0deg);
+  }
+  100% {
+    transform: translate(10%, 10%) rotate(360deg);
+  }
+}
+
+@keyframes water-shine {
+  0% {
+    opacity: 0.2;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0.2;
+    transform: scale(1.1) rotate(10deg);
+  }
+}
+
+@keyframes glow-pulse {
+  0% {
+    opacity: 0;
+    filter: blur(5px);
+  }
+  50% {
+    opacity: 0.3;
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 0.1;
+    filter: blur(5px);
+  }
+}
+
+@keyframes sparkle-fade {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: var(--sparkle-opacity, 0.8);
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+/* Ripple effect - more dynamic */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(0);
+  animation: ripple-effect 1.5s cubic-bezier(0.1, 0.5, 0.3, 1) forwards;
+  pointer-events: none;
+  z-index: 3;
+  transform-origin: center;
+  backdrop-filter: blur(1px);
+  mix-blend-mode: overlay;
+}
+
+@keyframes ripple-effect {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.9;
+    transform: scale(0);
+    filter: blur(0);
+  }
+  50% {
+    opacity: 0.6;
+    filter: blur(1px);
+  }
+  100% {
+    width: calc(300px * var(--ripple-intensity, 1));
+    height: calc(300px * var(--ripple-intensity, 1));
+    margin-left: calc(-150px * var(--ripple-intensity, 1));
+    margin-top: calc(-150px * var(--ripple-intensity, 1));
+    opacity: 0;
+    transform: scale(1);
+    filter: blur(2px);
+  }
 }
 
 .inner-circle {
@@ -88,7 +412,7 @@
   color: white;
   text-align: center;
   position: relative;
-  z-index: 2;
+  z-index: 5;
   box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
   font-family: "Quicksand", sans-serif; /* Add relaxed font */
 }
@@ -109,46 +433,6 @@
   font-weight: 300; /* Lighter weight for more relaxed look */
 }
 
-/* Ripple effect */
-.ripple {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(0);
-  opacity: 1;
-  pointer-events: none;
-}
-
-/* Base state */
-.scale-base {
-  transform: scale(1);
-  box-shadow: 0 0 40px rgba(102, 198, 255, 0.2);
-}
-
-/* Inhale state */
-.scale-inhale {
-  transform: scale(1.5);
-  box-shadow: 0 0 60px rgba(102, 198, 255, 0.4);
-}
-
-/* Hold after inhale state */
-.scale-hold-inhale {
-  transform: scale(1.5);
-  box-shadow: 0 0 60px rgba(102, 198, 255, 0.4);
-}
-
-/* Exhale state */
-.scale-exhale {
-  transform: scale(1);
-  box-shadow: 0 0 30px rgba(102, 198, 255, 0.2);
-}
-
-/* Hold after exhale state */
-.scale-hold-exhale {
-  transform: scale(1);
-  box-shadow: 0 0 30px rgba(102, 198, 255, 0.2);
-}
-
 /* Custom animation durations */
 .breathing-circle[data-phase="inhale"] {
   transition-duration: var(--inhale-duration);
@@ -156,18 +440,6 @@
 
 .breathing-circle[data-phase="exhale"] {
   transition-duration: var(--exhale-duration);
-}
-
-/* Ripple animations */
-@keyframes ripple-effect {
-  0% {
-    transform: scale(0);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(2);
-    opacity: 0;
-  }
 }
 
 /* Particle animations */

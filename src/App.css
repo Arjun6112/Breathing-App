@@ -1,14 +1,47 @@
 :root {
-  --background: hsl(230, 25%, 8%);
-  --foreground: hsl(219, 14%, 98%);
-  --primary: hsl(230, 85%, 67%);
-  --primary-foreground: white;
-  --muted: hsl(230, 20%, 15%);
-  --muted-rgb: 25, 28, 40;
-  --muted-foreground: hsl(220, 8%, 70%);
-  --border: hsl(230, 15%, 22%);
+  /* Light theme (default) */
+  --background: hsl(140, 30%, 97%);
+  --foreground: hsl(140, 25%, 15%);
+  --primary: hsl(150, 60%, 50%);
+  --primary-foreground: hsl(150, 60%, 10%);
+  --muted: hsl(140, 20%, 90%);
+  --muted-rgb: 230, 238, 232;
+  --muted-foreground: hsl(140, 15%, 40%);
+  --border: hsl(140, 15%, 85%);
   --radius: 8px;
-  --primary-rgb: 102, 120, 246;
+  --primary-rgb: 77, 191, 121;
+  --theme-toggle-bg: hsl(140, 20%, 95%);
+  --theme-toggle-fg: hsl(140, 25%, 25%);
+  --theme-toggle-hover: hsl(140, 30%, 90%);
+  --circle-gradient-start: hsl(150, 70%, 65%);
+  --circle-gradient-end: hsl(140, 70%, 45%);
+  --circle-glow: rgba(77, 191, 121, 0.3);
+  --particle-color: rgba(77, 191, 121, 0.8);
+  --header-gradient-start: hsl(135, 80%, 40%);
+  --header-gradient-end: hsl(155, 80%, 35%);
+  --background-glow: rgba(130, 230, 150, 0.15);
+}
+
+[data-theme="dark"] {
+  /* Dark theme */
+  --background: hsl(40, 15%, 10%);
+  --foreground: hsl(40, 30%, 90%);
+  --primary: hsl(40, 70%, 60%);
+  --primary-foreground: hsl(40, 15%, 10%);
+  --muted: hsl(40, 15%, 20%);
+  --muted-rgb: 40, 36, 28;
+  --muted-foreground: hsl(40, 20%, 75%);
+  --border: hsl(40, 15%, 25%);
+  --theme-toggle-bg: hsl(40, 15%, 15%);
+  --theme-toggle-fg: hsl(40, 70%, 70%);
+  --theme-toggle-hover: hsl(40, 20%, 20%);
+  --circle-gradient-start: hsl(40, 70%, 65%);
+  --circle-gradient-end: hsl(35, 80%, 40%);
+  --circle-glow: rgba(222, 184, 85, 0.3);
+  --particle-color: rgba(222, 184, 85, 0.8);
+  --header-gradient-start: hsl(45, 80%, 70%);
+  --header-gradient-end: hsl(35, 80%, 60%);
+  --background-glow: rgba(250, 230, 140, 0.1);
 }
 
 * {
@@ -20,14 +53,10 @@
 body {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--background);
-  background: radial-gradient(
-    ellipse at center,
-    hsl(230, 25%, 12%) 0%,
-    var(--background) 70%
-  );
   min-height: 100vh;
   color: var(--foreground);
   line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .app-container {
@@ -37,6 +66,17 @@ body {
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  background: radial-gradient(
+      ellipse at top left,
+      var(--background-glow) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse at bottom right,
+      var(--background-glow) 0%,
+      transparent 70%
+    ),
+    var(--background);
 }
 
 .app-header {
@@ -53,13 +93,13 @@ h1 {
   margin-bottom: 0.5rem;
   background: linear-gradient(
     to right,
-    hsl(210, 100%, 80%),
-    hsl(250, 100%, 80%)
+    var(--header-gradient-start),
+    var(--header-gradient-end)
   );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  text-shadow: 0 2px 15px rgba(102, 198, 255, 0.15);
+  text-shadow: 0 2px 15px rgba(var(--primary-rgb), 0.15);
 }
 
 .app-description {
@@ -85,24 +125,32 @@ h1 {
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
+  left: auto; /* Prevent it from being positioned on the left */
   width: 100%;
   max-width: 320px;
   z-index: 10;
+  margin-left: auto; /* Push to the right */
+  margin-right: 0; /* Ensure no right margin */
+  transform: none; /* Remove any transform that might affect positioning */
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .control-panel-section {
-    position: relative;
-    bottom: auto;
-    right: auto;
-    max-width: 100%;
-    margin: 1rem auto;
-    padding: 0 1rem;
+    position: fixed; /* Keep it fixed even on mobile */
+    bottom: 1rem;
+    right: 1rem;
+    left: auto;
+    max-width: calc(100% - 2rem); /* Ensure some padding from edges */
+    margin: 0; /* Reset any margins */
+    width: 320px; /* Set explicit width */
   }
 
-  .app-container {
-    padding-bottom: 1rem;
+  /* If screen is very small, make it take full width */
+  @media (max-width: 360px) {
+    .control-panel-section {
+      width: calc(100% - 2rem);
+    }
   }
 }
 
@@ -119,8 +167,74 @@ h1 {
 
 .star {
   position: absolute;
-  background-color: white;
+  background-color: var(--particle-color);
   border-radius: 50%;
+}
+
+/* Theme-specific background elements */
+.theme-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.light-element {
+  position: absolute;
+  background-color: rgba(100, 230, 120, 0.15);
+  border-radius: 50%;
+  display: none;
+}
+
+.dark-element {
+  position: absolute;
+  background-color: rgba(255, 210, 100, 0.08);
+  border-radius: 50%;
+  display: none;
+}
+
+/* Show elements based on current theme */
+:root .light-element {
+  display: block;
+}
+
+:root .dark-element {
+  display: none;
+}
+
+[data-theme="dark"] .light-element {
+  display: none;
+}
+
+[data-theme="dark"] .dark-element {
+  display: block;
+}
+
+/* Animation for floating elements */
+@keyframes float {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(20px, 20px);
+  }
+}
+
+/* Ensure the stars are always visible and on top of the theme background */
+.stars {
+  z-index: 2;
+}
+
+/* Ensure app content is above background elements */
+.app-header,
+.breathing-section,
+.control-panel-section {
+  position: relative;
+  z-index: 5;
 }
 
 /* Add focus styles that don't use outlines */

@@ -1,0 +1,115 @@
+.audio-player {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba(var(--muted-rgb), 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius);
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.play-button {
+  width: 36px;
+  height: 36px;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.play-button:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+.track-button {
+  width: 28px;
+  height: 28px;
+  background-color: rgba(var(--muted-rgb), 0.5);
+  color: var(--muted-foreground);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.track-button:hover {
+  color: var(--foreground);
+  background-color: rgba(var(--muted-rgb), 0.8);
+}
+
+.track-info {
+  font-size: 0.7rem;
+  color: var(--muted-foreground);
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+  text-align: center;
+  max-width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.track-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attribution {
+  font-size: 0.6rem;
+  opacity: 0.6;
+}
+
+.audio-player:hover .track-info {
+  opacity: 1;
+}
+
+/* Loading animation */
+.loading-icon {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .audio-player {
+    top: 1rem; /* Keep it at the top on mobile */
+    bottom: auto;
+    right: 1rem;
+  }
+
+  .track-info {
+    max-width: 80px;
+  }
+}
