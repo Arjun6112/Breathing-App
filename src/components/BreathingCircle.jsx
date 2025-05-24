@@ -153,39 +153,50 @@ const BreathingCircle = ({
     setParticles([]);
   };
 
-  // Start a new breath cycle
+  // Start a new breath cycle with simpler transitions
   const startBreathCycle = () => {
-    setBreathingPhase("inhale");
-    setMessage("Inhale");
-    generateParticles(6, "inhale");
+    const simpleTransition = (
+      nextPhase,
+      nextMessage,
+      particleCount,
+      particlePhase,
+      delay
+    ) => {
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          setBreathingPhase(nextPhase);
+          setMessage(nextMessage);
 
-    // Schedule the hold after inhale
+          // Force reflow to ensure animation applies properly
+          if (circleRef.current) {
+            void circleRef.current.offsetWidth;
+          }
+
+          generateParticles(particleCount, particlePhase);
+        });
+      }, delay);
+    };
+
+    // Start inhale phase
+    simpleTransition("inhale", "Inhale", 6, "inhale", 100);
+
+    // Schedule phases with proper timing
     timerRef.current = setTimeout(() => {
-      setBreathingPhase("hold-inhale");
-      setMessage("Hold");
-      generateParticles(3, "hold-inhale");
+      simpleTransition("hold-inhale", "Hold", 3, "hold-inhale", 100);
 
-      // Schedule the exhale
       timerRef.current = setTimeout(() => {
-        setBreathingPhase("exhale");
-        setMessage("Exhale");
-        generateParticles(6, "exhale");
+        simpleTransition("exhale", "Exhale", 6, "exhale", 100);
 
-        // Schedule the hold after exhale
         timerRef.current = setTimeout(() => {
           if (holdAfterExhale > 0) {
-            setBreathingPhase("hold-exhale");
-            setMessage("Hold");
-            generateParticles(2, "hold-exhale");
+            simpleTransition("hold-exhale", "Hold", 2, "hold-exhale", 100);
 
-            // Schedule the next cycle
             timerRef.current = setTimeout(() => {
               cycleCountRef.current++;
               setPhaseCount(cycleCountRef.current);
               startBreathCycle();
             }, holdExhaleDuration);
           } else {
-            // If no hold after exhale, go directly to next cycle
             cycleCountRef.current++;
             setPhaseCount(cycleCountRef.current);
             startBreathCycle();
@@ -193,6 +204,12 @@ const BreathingCircle = ({
         }, exhaleDuration);
       }, holdInhaleDuration);
     }, inhaleDuration);
+  };
+
+  // Simplify message rendering
+  const renderMessage = () => {
+    const messageContent = typeof message === "object" ? message.text : message;
+    return <div className="message">{messageContent}</div>;
   };
 
   // Effect for handling breathing state changes
@@ -255,6 +272,28 @@ const BreathingCircle = ({
     }
   };
 
+  // Ensure wavy elements scale properly with the breathing circle
+  useEffect(() => {
+    // Add a data-scaling attribute to help with CSS animations
+    if (circleRef.current) {
+      if (breathingPhase === "inhale" || breathingPhase === "hold-inhale") {
+        circleRef.current.setAttribute("data-scaling", "expanded");
+      } else {
+        circleRef.current.setAttribute("data-scaling", "normal");
+      }
+    }
+  }, [breathingPhase]);
+
+  // When the component mounts or unmounts
+  useEffect(() => {
+    // Add GPU acceleration class to body
+    document.body.classList.add("hardware-accelerated");
+
+    return () => {
+      document.body.classList.remove("hardware-accelerated");
+    };
+  }, []);
+
   return (
     <div className="breathing-container">
       <div
@@ -272,6 +311,10 @@ const BreathingCircle = ({
           }s`,
           "--hold-after-inhale": `${holdAfterInhale}s`,
           "--hold-after-exhale": `${holdAfterExhale}s`,
+          // Better easing curves
+          "--ease-in-out": "cubic-bezier(0.65, 0, 0.35, 1)",
+          "--ease-out": "cubic-bezier(0.33, 1, 0.68, 1)",
+          "--ease-in": "cubic-bezier(0.32, 0, 0.67, 0)",
         }}
       >
         {/* Wavy border element */}
@@ -341,7 +384,7 @@ const BreathingCircle = ({
           ))}
         </div>
         <div className="inner-circle">
-          <div className="message">{message}</div>
+          {renderMessage()}
           {isBreathing && phaseCount > 0 && (
             <div className="phase-count">Breath {phaseCount}</div>
           )}

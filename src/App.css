@@ -1,6 +1,6 @@
 :root {
   /* Light theme (default) */
-  --background: hsl(140, 30%, 97%);
+  --background: hsl(145, 68%, 84%);
   --foreground: hsl(140, 25%, 15%);
   --primary: hsl(150, 60%, 50%);
   --primary-foreground: hsl(150, 60%, 10%);
@@ -185,7 +185,7 @@ h1 {
 
 .light-element {
   position: absolute;
-  background-color: rgba(100, 230, 120, 0.15);
+  background-color: rgba(81, 235, 104, 0.15);
   border-radius: 50%;
   display: none;
 }
@@ -241,4 +241,23 @@ h1 {
 button:focus {
   box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.4);
   outline: none;
+}
+
+/* Hardware acceleration for smoother animations */
+.hardware-accelerated,
+.breathing-circle,
+.wave-layer1,
+.wave-layer2,
+.wave-layer3,
+.wavy-border,
+.inner-circle,
+.message,
+.sparkle,
+.ripple,
+.glow-edge {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: transform;
 }

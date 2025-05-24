@@ -82,19 +82,7 @@ const ControlPanel = ({
       </button>
 
       <div>
-        <h3 className="section-title">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-          </svg>
-          Breathing Techniques
-        </h3>
+        <h3 className="section-title">Breathing Techniques</h3>
         <div className="preset-buttons">
           <button
             className={`preset-button ${
