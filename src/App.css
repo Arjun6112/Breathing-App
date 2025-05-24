@@ -1,25 +1,26 @@
 :root {
-  /* Light theme (default) */
-  --background: hsl(145, 68%, 84%);
-  --foreground: hsl(140, 25%, 15%);
-  --primary: hsl(150, 60%, 50%);
-  --primary-foreground: hsl(150, 60%, 10%);
-  --muted: hsl(140, 20%, 90%);
-  --muted-rgb: 230, 238, 232;
-  --muted-foreground: hsl(140, 15%, 40%);
-  --border: hsl(140, 15%, 85%);
+  /* Light theme (default) - Warm Cream & Sage */
+  --background: hsl(45, 30%, 96%);
+  --foreground: hsl(140, 30%, 22%);
+  --primary: hsl(150, 40%, 58%);
+  --primary-foreground: hsl(150, 70%, 18%);
+  --muted: hsl(45, 25%, 92%);
+  --muted-rgb: 240, 235, 225;
+  --muted-foreground: hsl(140, 25%, 48%);
+  --border: hsl(45, 20%, 87%);
   --radius: 8px;
-  --primary-rgb: 77, 191, 121;
-  --theme-toggle-bg: hsl(140, 20%, 95%);
-  --theme-toggle-fg: hsl(140, 25%, 25%);
-  --theme-toggle-hover: hsl(140, 30%, 90%);
-  --circle-gradient-start: hsl(150, 70%, 65%);
-  --circle-gradient-end: hsl(140, 70%, 45%);
-  --circle-glow: rgba(77, 191, 121, 0.3);
-  --particle-color: rgba(77, 191, 121, 0.8);
-  --header-gradient-start: hsl(135, 80%, 40%);
-  --header-gradient-end: hsl(155, 80%, 35%);
-  --background-glow: rgba(130, 230, 150, 0.15);
+  --primary-rgb: 100, 160, 120;
+  --theme-toggle-bg: hsl(45, 25%, 94%);
+  --theme-toggle-fg: hsl(140, 35%, 25%);
+  --theme-toggle-hover: hsl(45, 30%, 89%);
+  --circle-gradient-start: hsl(150, 50%, 68%);
+  --circle-gradient-end: hsl(145, 45%, 48%);
+  --circle-glow: rgba(100, 160, 120, 0.35);
+  --particle-color: rgba(60, 120, 80, 0.85);
+  --particle-shadow: 0 0 8px rgba(60, 120, 80, 0.6);
+  --header-gradient-start: hsl(150, 60%, 48%);
+  --header-gradient-end: hsl(140, 55%, 43%);
+  --background-glow: rgba(130, 180, 150, 0.1);
 }
 
 [data-theme="dark"] {
@@ -39,6 +40,7 @@
   --circle-gradient-end: hsl(35, 80%, 40%);
   --circle-glow: rgba(222, 184, 85, 0.3);
   --particle-color: rgba(222, 184, 85, 0.8);
+  --particle-shadow: 0 0 6px rgba(222, 184, 85, 0.5);
   --header-gradient-start: hsl(45, 80%, 70%);
   --header-gradient-end: hsl(35, 80%, 60%);
   --background-glow: rgba(250, 230, 140, 0.1);
@@ -48,6 +50,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent; /* Remove blue outline on click */
 }
 
 body {
@@ -169,6 +172,7 @@ h1 {
   position: absolute;
   background-color: var(--particle-color);
   border-radius: 50%;
+  box-shadow: var(--particle-shadow); /* Add shadow for better visibility */
 }
 
 /* Theme-specific background elements */
@@ -237,7 +241,29 @@ h1 {
   z-index: 5;
 }
 
-/* Add focus styles that don't use outlines */
+/* Remove focus outlines and blue borders on click */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input,
+a,
+*:focus,
+*:active {
+  outline: none !important;
+}
+
+/* Improve focus styles for accessibility - subtle custom styles instead of default outlines */
+button:focus,
+input:focus,
+a:focus,
+*:focus-visible {
+  box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.4);
+  outline: none;
+}
+
+/* Override existing focus styles */
 button:focus {
   box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.4);
   outline: none;

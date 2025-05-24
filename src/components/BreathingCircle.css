@@ -579,3 +579,83 @@
   pointer-events: none;
   opacity: 0; /* Hidden in production, set to 1 for debugging */
 }
+
+/* Particles styling - enhanced for better visibility in light mode */
+.particles-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.particle {
+  position: absolute;
+  background-color: var(--particle-color);
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: var(--particle-shadow); /* Add glow effect */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border for definition */
+}
+
+/* Enhanced particle animations */
+@keyframes float-up {
+  0% {
+    transform: translate(0, 0) scale(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    transform: translate(
+        calc(var(--random-x) * 10px),
+        calc(var(--random-y) * 10px)
+      )
+      scale(1);
+  }
+  80% {
+    opacity: 0.8;
+    transform: translate(
+        calc(var(--random-x) * 30px),
+        calc(var(--random-y) * 30px)
+      )
+      scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(
+        calc(var(--random-x) * 50px),
+        calc(var(--random-y) * 50px)
+      )
+      scale(0.5);
+  }
+}
+
+@keyframes float-out {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate(
+        calc(var(--random-x) * 20px),
+        calc(var(--random-y) * 20px)
+      )
+      scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(
+        calc(var(--random-x) * 40px),
+        calc(var(--random-y) * 40px)
+      )
+      scale(0);
+  }
+}
+
+/* Phase-specific particle counts - generate more particles for better visibility */
+.phase-count {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 0.5rem;
+  font-weight: 300;
+}

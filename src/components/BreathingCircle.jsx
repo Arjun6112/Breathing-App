@@ -33,15 +33,15 @@ const BreathingCircle = ({
 
   // Generate subtle particles
   const generateParticles = (count, phase) => {
-    // Use fewer particles for better performance
-    const actualCount = Math.min(count, 8);
+    // Increase particle count in light mode for better visibility
+    const actualCount = Math.min(count * 1.5, 12); // Increased from 8 to 12
     const newParticles = [];
 
     for (let i = 0; i < actualCount; i++) {
       const randomX = Math.random() * 2 - 1; // -1 to 1
       const randomY = Math.random() * 2 - 1; // -1 to 1
-      const size = Math.random() * 4 + 2; // 2px to 6px
-      const opacity = Math.random() * 0.3 + 0.2; // 0.2 to 0.5
+      const size = Math.random() * 6 + 3; // Increased from 2-6px to 3-9px
+      const opacity = Math.random() * 0.5 + 0.4; // Increased from 0.2-0.5 to 0.4-0.9
       const duration = Math.random() * 2 + 1.5; // 1.5s to 3.5s
       const delay = Math.random() * 0.5; // 0s to 0.5s
 
@@ -177,15 +177,15 @@ const BreathingCircle = ({
       }, delay);
     };
 
-    // Start inhale phase
-    simpleTransition("inhale", "Inhale", 6, "inhale", 100);
+    // Start inhale phase with more particles
+    simpleTransition("inhale", "Inhale", 8, "inhale", 100); // Increased from 6 to 8
 
     // Schedule phases with proper timing
     timerRef.current = setTimeout(() => {
-      simpleTransition("hold-inhale", "Hold", 3, "hold-inhale", 100);
+      simpleTransition("hold-inhale", "Hold", 4, "hold-inhale", 100); // Increased from 3 to 4
 
       timerRef.current = setTimeout(() => {
-        simpleTransition("exhale", "Exhale", 6, "exhale", 100);
+        simpleTransition("exhale", "Exhale", 8, "exhale", 100); // Increased from 6 to 8
 
         timerRef.current = setTimeout(() => {
           if (holdAfterExhale > 0) {

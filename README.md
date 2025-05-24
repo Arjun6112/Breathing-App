@@ -1,12 +1,58 @@
-# React + Vite
+# Mindful Breathing App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple tool for guided breathing exercises and relaxation that helps reduce stress and improve focus.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Multiple breathing techniques (Box Breathing, 4-7-8 Technique, Calming Breath)
+- Customizable breath duration and ratios
+- Relaxing background audio options
+- Light and dark themes
+- Interactive water-like breathing circle
 
-## Expanding the ESLint configuration
+## Local Development
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
+
+- Node.js 16.x or higher
+- npm or yarn
+
+### Setup
+
+1. Clone the repository
+2. Install dependencies: `npm install` or `yarn`
+3. Start the development server: `npm run dev` or `yarn dev`
+4. Open your browser to the URL displayed in the terminal (usually http://localhost:5173/)
+
+### Audio Files
+
+The app includes three audio tracks in the `src/assets/audio` directory:
+
+- `calm-meditation.mp3` - Gentle meditation music
+- `gentle-ocean.mp3` - Ocean waves sounds
+- `forest-ambience.mp3` - Forest ambience with birds
+
+To use different audio files:
+
+1. Place your audio files in the `src/assets/audio` directory
+2. Update the imports in `src/components/AudioPlayer.jsx`
+3. Make sure your audio files are in MP3 format for best compatibility
+
+## Building for Production
+
+To create an optimized production build:
+
+```bash
+npm run build
+# or
+yarn build
+```
+
+The build output will be in the `dist` directory, which can be deployed to any static hosting service.
+
+## Technologies Used
+
+- React
+- Vite
+- CSS3 with custom animations
+- HTML5 Audio API
