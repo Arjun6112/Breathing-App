@@ -9,11 +9,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Separate audio files into their own chunk
+          // Separate audio files into their own chunk - updated with correct filenames
           audio: [
-            "src/assets/audio/calm-meditation.mp3",
-            "src/assets/audio/gentle-ocean.mp3",
-            "src/assets/audio/forest-ambience.mp3",
+            "src/assets/audio/breath-of-life_10-minutes-320859.mp3",
+            "src/assets/audio/echoes-of-earth-ambient-atmospheric-marimbas-345054.mp3",
+            "src/assets/audio/inner-peace-339640.mp3",
           ],
         },
       },
